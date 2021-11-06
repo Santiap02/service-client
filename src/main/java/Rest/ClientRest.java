@@ -35,7 +35,7 @@ public class ClientRest {
 	*/
 
 	@GetMapping(value="/clientes",produces= MediaType.APPLICATION_JSON_VALUE)
-	ResponseDto<List<Cliente>> recuperarClientes(){
+	ResponseDto<List<Cliente>> getAllClients(){
 		return (feignServiceGet.recuperarClientes());
 	}
 
@@ -51,32 +51,33 @@ public class ClientRest {
 	}
 
 	@GetMapping("/photo/{clientId}")
-	public ResponseDto<String> getPhotoid(@PathVariable int clientId) {
+	public ResponseDto<String> getPhotoById(@PathVariable int clientId) {
 		var response = feignServiceGet.getPhotoid(clientId);
 		return response;
 	}
 
 	@GetMapping(value="/clientes/mayores/{age}",produces= MediaType.APPLICATION_JSON_VALUE)
-	public ResponseDto<List<Cliente>> recuperarClientesMayores(@PathVariable("age") int edad) {
+	public ResponseDto<List<Cliente>> getOlderClients(@PathVariable("age") int edad) {
 		return feignServiceGet.recuperarClientesMayores(edad);
 	}
 
-	@PostMapping(value="/clientes",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.TEXT_PLAIN_VALUE)
-	public ResponseDto<String> guardarCliente(@RequestBody Cliente cliente){
+	@PostMapping(value="/clientes")
+	public ResponseDto<String> saveClient(@RequestBody Cliente cliente){
 		return feignServiceCreate.saveClient(cliente);
 	}
 
 	@PostMapping("/photos/add")
-	public ResponseDto<String> AgregarFoto(@RequestParam("clientId") int clientId, @RequestParam("image") MultipartFile image, Model model) throws IOException {
-		return feignServiceCreate.addPhoto(clientId, new String(image.getBytes()), model);
+	public ResponseDto<String> addPhoto(@RequestParam("clientId") int clientId, @RequestParam("image") MultipartFile image) throws IOException {
+		return feignServiceCreate.addPhoto( image, clientId);
 	}
 
 	@DeleteMapping(value="/clientes/{id}",produces=MediaType.APPLICATION_JSON_VALUE)
 	public ResponseDto<String> BorrarClienteId(@PathVariable("id") int id){
 		return feignServiceDelete.BorrarClienteId(id);
 	}
+
 	@DeleteMapping("/photos/{clientId}")
-	public ResponseDto<String> borrarfotoId(@PathVariable int clientId){
+	public ResponseDto<String> deletePhotoById(@PathVariable int clientId){
 		return feignServiceDelete.BorrarfotoId(clientId);
 	}
 
