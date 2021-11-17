@@ -1,6 +1,7 @@
 package ApplicationConfig;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
@@ -10,6 +11,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.client.support.BasicAuthenticationInterceptor;
 import org.springframework.web.client.RestTemplate;
+import provider.aws.AwsProvider;
 
 @Slf4j
 @Import(SecurityConfig.class)
@@ -30,6 +32,10 @@ public class ClientApplication {
 		intercep=new BasicAuthenticationInterceptor("admin", "admin");
 		template.getInterceptors().add(intercep);
 		return template;
+	}
+	@Bean
+	CommandLineRunner run(AwsProvider awsProvider) {
+		return args -> log.debug("Result: {}", awsProvider.getAwsClientList());
 	}
 
 }
