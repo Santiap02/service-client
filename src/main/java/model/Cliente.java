@@ -5,6 +5,7 @@ package model;
  * @author santiago.alvarezp@udea.edu.co
  *
  */
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,7 @@ import java.io.Serializable;
 @Table(name="clientes")
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Cliente implements Serializable {
 
     private static final long serialVersionUID = 5759483207455904078L;
@@ -30,7 +32,7 @@ public class Cliente implements Serializable {
     private String nombres;
     private String apellidos;
     private String docType;
-    private Integer Edad;
+    private Integer edad;
     private String ciudad;
 
 }
