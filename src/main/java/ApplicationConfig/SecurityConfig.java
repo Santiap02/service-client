@@ -13,7 +13,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @EnableWebSecurity
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
-
+    private final static String ADMIN = "ADMIN";
+    private final static String CLIENTES = "/clientes";
     //definición roles y usuarios
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -31,12 +32,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                //solo los miembros del rol admin podrán realizar altas
-                //y para ver la lista de contactos, tendrán que estar autenticados
-                .antMatchers(HttpMethod.POST,"/clientes").authenticated()
-                .antMatchers(HttpMethod.POST,"/photos/add").authenticated()
-                //.antMatchers("/**").authenticated()
-                //.antMatchers("/contactos/**").authenticated()
+                .antMatchers(HttpMethod.POST,CLIENTES).fullyAuthenticated()
+                .antMatchers(HttpMethod.POST,"/photos/add").fullyAuthenticated()
+                .antMatchers(HttpMethod.PUT,"/photos/update").fullyAuthenticated()
+                .antMatchers(HttpMethod.PUT,"/clientes/actualizar/").fullyAuthenticated()
+                .antMatchers(HttpMethod.DELETE,"/photos/").hasRole(ADMIN)
+                .antMatchers(HttpMethod.DELETE,CLIENTES).hasRole(ADMIN)
+                .antMatchers(HttpMethod.GET,"/clientes/*").fullyAuthenticated()
+                .antMatchers(HttpMethod.GET,CLIENTES).fullyAuthenticated()
+                .antMatchers(HttpMethod.GET, "/clientes/mayores/*").hasRole(ADMIN)
+                .antMatchers(HttpMethod.GET, "/photo/*").fullyAuthenticated()
+                .antMatchers(HttpMethod.GET, "/photos/*").fullyAuthenticated()
                 .and()
                 .httpBasic();
 
