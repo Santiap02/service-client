@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
-import model.Cliente;
+import Domain.ClienteDto;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,7 +36,7 @@ public class ClientRest {
 			@ApiResponse(code = 404, message = "No hay clientes para mostrar", response = ResponseDto.class),
 			@ApiResponse(code = 500, message = "Error inesperado durante el proceso", response = ResponseDto.class) })
 	@GetMapping(value="/clientes",produces= MediaType.APPLICATION_JSON_VALUE)
-	public ResponseDto<List<Cliente>> getAllClients(){
+	public ResponseDto<List<ClienteDto>> getAllClients(){
 		return (feignServiceGet.recuperarClientes());
 	}
 
@@ -46,7 +46,7 @@ public class ClientRest {
 			@ApiResponse(code = 404, message = "No hay clientes para mostrar", response = ResponseDto.class),
 			@ApiResponse(code = 500, message = "Error inesperado durante el proceso", response = ResponseDto.class) })
 	@GetMapping(value="clientes/{id}",produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseDto<Cliente> getClientId(@PathVariable("id") int id){
+	public ResponseDto<ClienteDto> getClientId(@PathVariable("id") int id){
 		return feignServiceGet.getClientId(id);
 	}
 
@@ -56,7 +56,7 @@ public class ClientRest {
 			@ApiResponse(code = 404, message = "No hay clientes para mostrar", response = ResponseDto.class),
 			@ApiResponse(code = 500, message = "Error inesperado durante el proceso", response = ResponseDto.class) })
 	@GetMapping(value="/clientes/mayores/{age}",produces= MediaType.APPLICATION_JSON_VALUE)
-	public ResponseDto<List<Cliente>> getOlderClients(@PathVariable("age") int edad) {
+	public ResponseDto<List<ClienteDto>> getOlderClients(@PathVariable("age") int edad) {
 		return feignServiceGet.recuperarClientesMayores(edad);
 	}
 
@@ -87,8 +87,8 @@ public class ClientRest {
 			@ApiResponse(code = 400, message = "Solicitud incorrecta. Por favor valide los datos enviados.", response = ResponseDto.class),
 			@ApiResponse(code = 500, message = "Error inesperado durante el proceso", response = ResponseDto.class) })
 	@PostMapping(value="/clientes")
-	public ResponseDto<String> saveClient(@RequestBody Cliente cliente){
-		return feignServiceCreate.saveClient(cliente);
+	public ResponseDto<String> saveClient(@RequestBody ClienteDto clienteDto){
+		return feignServiceCreate.saveClient(clienteDto);
 	}
 
 	@Operation(summary = "Creación de imagen de un cliente", description = "Permite crear una nueva imagen de un cliente")
@@ -128,7 +128,7 @@ public class ClientRest {
 			@ApiResponse(code = 400, message = "Solicitud incorrecta. Por favor valide los datos enviados.", response = ResponseDto.class),
 			@ApiResponse(code = 500, message = "Error inesperado durante el proceso", response = ResponseDto.class) })
 	@PutMapping(value="clientes/actualizar/",consumes= MediaType.APPLICATION_JSON_VALUE)
-	public ResponseDto<String> updateClient(@Parameter(name = "cliente", required = true, description = "Nuevos datos del cliente", schema = @Schema(implementation = Cliente.class), in = ParameterIn.QUERY)@RequestBody Cliente client){
+	public ResponseDto<String> updateClient(@Parameter(name = "cliente", required = true, description = "Nuevos datos del cliente", schema = @Schema(implementation = ClienteDto.class), in = ParameterIn.QUERY)@RequestBody ClienteDto client){
 		return feignServiceModify.actualizarContacto(client);
 	}
 
@@ -149,7 +149,7 @@ public class ClientRest {
 			@ApiResponse(code = 404, message = "No hay clientes para mostrar", response = ResponseDto.class),
 			@ApiResponse(code = 500, message = "Error inesperado durante el proceso", response = ResponseDto.class) })
 	@GetMapping(value="/aws/clientes",produces= MediaType.APPLICATION_JSON_VALUE)
-	public ResponseDto<List<Cliente>> getAllAwsClients(){
+	public ResponseDto<List<ClienteDto>> getAllAwsClients(){
 		return this.awsProvider.getAwsClientList();
 	}
 
@@ -159,7 +159,7 @@ public class ClientRest {
 			@ApiResponse(code = 404, message = "No hay clientes para mostrar", response = ResponseDto.class),
 			@ApiResponse(code = 500, message = "Error inesperado durante el proceso", response = ResponseDto.class) })
 	@GetMapping(value="/aws/clientes/{id}",produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseDto<Cliente> getAwsClientId(@PathVariable("id") int id){
+	public ResponseDto<ClienteDto> getAwsClientId(@PathVariable("id") int id){
 		return this.awsProvider.getAwsClient(id);
 	}
 
@@ -170,8 +170,8 @@ public class ClientRest {
 			@ApiResponse(code = 400, message = "Solicitud incorrecta. Por favor valide los datos enviados.", response = ResponseDto.class),
 			@ApiResponse(code = 500, message = "Error inesperado durante el proceso", response = ResponseDto.class) })
 	@PostMapping(value="/aws/clientes")
-	public ResponseDto<String> saveAwsClient(@RequestBody Cliente cliente){
-		return this.awsProvider.createAwsClientClient(cliente);
+	public ResponseDto<String> saveAwsClient(@RequestBody ClienteDto clienteDto){
+		return this.awsProvider.createAwsClientClient(clienteDto);
 	}
 
 	@Operation(summary = "Actualizar datos de un cliente Aws", description = "Permite actualizar los datos de un cliente")
@@ -180,7 +180,7 @@ public class ClientRest {
 			@ApiResponse(code = 400, message = "Solicitud incorrecta. Por favor valide los datos enviados.", response = ResponseDto.class),
 			@ApiResponse(code = 500, message = "Error inesperado durante el proceso", response = ResponseDto.class) })
 	@PutMapping(value="/aws/clientes/actualizar/",consumes= MediaType.APPLICATION_JSON_VALUE)
-	public ResponseDto<String> updateAwsClient(@Parameter(name = "cliente", required = true, description = "Nuevos datos del cliente", schema = @Schema(implementation = Cliente.class), in = ParameterIn.QUERY)@RequestBody Cliente client){
+	public ResponseDto<String> updateAwsClient(@Parameter(name = "cliente", required = true, description = "Nuevos datos del cliente", schema = @Schema(implementation = ClienteDto.class), in = ParameterIn.QUERY)@RequestBody ClienteDto client){
 		return this.awsProvider.updateAwsClientClient(client);
 	}
 

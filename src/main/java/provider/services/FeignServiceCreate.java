@@ -1,12 +1,10 @@
 package provider.services;
 
 import Domain.ResponseDto;
-import feign.Headers;
 import ApplicationConfig.FeignConfiguration;
-import model.Cliente;
+import Domain.ClienteDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,11 +13,11 @@ public interface FeignServiceCreate {
 
     /**
      *
-     * @param cliente
+     * @param clienteDto
      * @return
      */
     @PostMapping(value="/clientes",consumes= MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
-    ResponseDto<String> saveClient(@RequestBody Cliente cliente);
+    ResponseDto<String> saveClient(@RequestBody ClienteDto clienteDto);
 
     /**
      * Save photo

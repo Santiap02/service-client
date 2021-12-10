@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import exception.ServiceException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import model.Cliente;
+import Domain.ClienteDto;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -29,9 +29,9 @@ public class AwsProvider {
     private static final ObjectMapper MAPPER = new ObjectMapper();
     private static final String IP = "192.168.0.1";
 
-    public ResponseDto<Cliente> getAwsClient(int clientId) {
+    public ResponseDto<ClienteDto> getAwsClient(int clientId) {
         log.debug("getAwsClients");
-        ResponseDto<Cliente> response;
+        ResponseDto<ClienteDto> response;
         HttpHeaders headers = new HttpHeaders();
         headers.set("ip", IP);
         HttpEntity<Void> entity = new HttpEntity<>(headers);
@@ -50,7 +50,7 @@ public class AwsProvider {
                 throw new ServiceException(responseTemplateBody.getStatus(), responseTemplateBody.getResponseCode(),
                         responseTemplateBody.getResponseMessage());
             }
-            var cliente = MAPPER.convertValue(responseTemplateBody.getData(), new TypeReference<Cliente>() {
+            var cliente = MAPPER.convertValue(responseTemplateBody.getData(), new TypeReference<ClienteDto>() {
             });
             response = new ResponseDto<>(responseTemplateBody.getStatus(), responseTemplateBody.getResponseCode(),
                     responseTemplateBody.getResponseMessage(), cliente);
@@ -61,9 +61,9 @@ public class AwsProvider {
         return response;
     }
 
-    public ResponseDto<List<Cliente>> getAwsClientList() {
+    public ResponseDto<List<ClienteDto>> getAwsClientList() {
         log.debug("getAwsClientList");
-        ResponseDto<List<Cliente>> response;
+        ResponseDto<List<ClienteDto>> response;
         HttpHeaders headers = new HttpHeaders();
         headers.set("ip", IP);
         HttpEntity<Void> entity = new HttpEntity<>(headers);
@@ -81,7 +81,7 @@ public class AwsProvider {
                throw new ServiceException(responseTemplateBody.getStatus(), responseTemplateBody.getResponseCode(),
                        responseTemplateBody.getResponseMessage());
            }
-           var cliente = MAPPER.convertValue(responseTemplateBody.getData(), new TypeReference<List<Cliente>>() {
+           var cliente = MAPPER.convertValue(responseTemplateBody.getData(), new TypeReference<List<ClienteDto>>() {
            });
            response = new ResponseDto<>(responseTemplateBody.getStatus(), responseTemplateBody.getResponseCode(),
                    responseTemplateBody.getResponseMessage(), cliente);
@@ -92,12 +92,12 @@ public class AwsProvider {
         return response;
     }
 
-    public ResponseDto<String> createAwsClientClient(Cliente cliente) {
+    public ResponseDto<String> createAwsClientClient(ClienteDto clienteDto) {
         log.debug("createAwsClientClient");
         ResponseDto<String> response;
         HttpHeaders headers = new HttpHeaders();
         headers.set("ip", IP);
-        HttpEntity<Cliente> entity = new HttpEntity<>(cliente, headers);
+        HttpEntity<ClienteDto> entity = new HttpEntity<>(clienteDto, headers);
         var parametersUrl = GET_URL+"create";
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(parametersUrl);
         var responseTemplate = this.restTemplate.exchange(builder.build().toUriString(),
@@ -120,12 +120,12 @@ public class AwsProvider {
         return response;
     }
 
-    public ResponseDto<String> updateAwsClientClient(Cliente cliente) {
+    public ResponseDto<String> updateAwsClientClient(ClienteDto clienteDto) {
         log.debug("updateAwsClientClient");
         ResponseDto<String> response;
         HttpHeaders headers = new HttpHeaders();
         headers.set("ip", IP);
-        HttpEntity<Cliente> entity = new HttpEntity<>(cliente, headers);
+        HttpEntity<ClienteDto> entity = new HttpEntity<>(clienteDto, headers);
         var parametersUrl = GET_URL+"update";
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(parametersUrl);
         var responseTemplate = this.restTemplate.exchange(builder.build().toUriString(),
@@ -148,8 +148,8 @@ public class AwsProvider {
         return response;
     }
 
-    public static Cliente createClient(){
-        return  (new Cliente(777,"santiago", "Alvarez", "cc", 24, "Medellin"));
+    public static ClienteDto createClient(){
+        return  (new ClienteDto(777,"santiago", "Alvarez", "cc", 24, "Medellin"));
     }
 
     public ResponseDto<String> deleteAwsClient(int clientId) {
